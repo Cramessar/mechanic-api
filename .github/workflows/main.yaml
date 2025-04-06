@@ -26,6 +26,20 @@ jobs:
           echo "Python: $(python --version)"
           echo "Files: $(ls -l)"
 
+  tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - run: |
+          pip install -r requirements.txt
+          python -m unittest discover -s tests -p "test_*.py"
+
+
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
