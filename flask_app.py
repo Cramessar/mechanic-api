@@ -1,5 +1,5 @@
 # File: flask_app.py
-# Swagger UI URL: http://localhost:5000/apidocs
+# Swagger API URL: http://localhost:5000/apidocs
 from application import create_app
 from config import ProductionConfig
 import os

@@ -49,6 +49,7 @@ def create_app(config_class=Config):
     def index():
         return {"message": "Welcome to the Mechanic API!"}
     
+    #this is just for testing purposes but we all know its really a sanity check and its probably here to stay.
     @app.route("/config-check")
     def config_check():
         return {

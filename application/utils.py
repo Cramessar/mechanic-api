@@ -23,6 +23,7 @@ def encode_token(user_id, role="customer"):
         "sub": str(user_id),  
         "role": role,
         "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+        #need this to make sure the tests dont break...again .utcnow()
     }
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
