@@ -7,7 +7,7 @@ from config import Config
 from application.extensions import db, ma, limiter, cache
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/static', static_folder='static')
     app.config.from_object(config_class)
 
     print(f"🛠️ App Config: DEBUG={app.config['DEBUG']}")
@@ -19,7 +19,7 @@ def create_app(config_class=Config):
     cache.init_app(app)
     Migrate(app, db)
 
-    # Swagger setup with separated template and config
+    # Swagger setup
     swagger_template = {
         "swagger": "2.0",
         "info": {
@@ -28,7 +28,8 @@ def create_app(config_class=Config):
             "version": "1.0.0"
         },
         "host": "mechanic-api-ewyr.onrender.com",
-        "schemes": ["https"]
+        "schemes": ["https"],
+        "basePath": "/"
     }
 
     swagger_config = {
@@ -41,6 +42,7 @@ def create_app(config_class=Config):
                 "model_filter": lambda tag: True,
             }
         ],
+        "static_url_path": "/flasgger_static", # static folder for swagger UI so the page isnt blank
         "swagger_ui": True,
         "specs_route": "/apidocs"
     }
