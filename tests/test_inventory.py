@@ -7,12 +7,12 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from seed import seed_db
-
+from config import TestingConfig
 
 
 class InventoryRoutesTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = create_app("testing")
+        self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
 
         with self.app.app_context():
