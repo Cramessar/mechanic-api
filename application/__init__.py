@@ -17,7 +17,22 @@ def create_app(config_class=Config):
     limiter.init_app(app)
     cache.init_app(app)
     Migrate(app, db)
-    Swagger(app)  # Optional: add template override later for production
+    Swagger(app, config={
+    "headers": [],
+    "specs": [
+        {
+            "endpoint": 'apispec_1',
+            "route": '/apispec_1.json',
+            "rule_filter": lambda rule: True,
+            "model_filter": lambda tag: True,
+        }
+    ],
+    "swagger_ui": True,
+    "specs_route": "/apidocs",
+    "host": "mechanic-api-ewyr.onrender.com",
+    "schemes": ["https"]
+})
+
 
     # Register blueprints
     from application.blueprints.customers.routes import customers_bp
