@@ -16,7 +16,6 @@ class TestConfig:
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     TESTING = True
 
-
 class MechanicRoutesTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()

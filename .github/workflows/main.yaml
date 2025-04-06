@@ -29,6 +29,9 @@ jobs:
   tests:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
