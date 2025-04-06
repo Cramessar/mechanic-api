@@ -19,7 +19,19 @@ def create_app(config_class=Config):
     cache.init_app(app)
     Migrate(app, db)
 
-    Swagger(app, config={
+    # Swagger setup with separated template and config
+    swagger_template = {
+        "swagger": "2.0",
+        "info": {
+            "title": "Mechanic API",
+            "description": "Auto repair management system API documentation.",
+            "version": "1.0.0"
+        },
+        "host": "mechanic-api-ewyr.onrender.com",
+        "schemes": ["https"]
+    }
+
+    swagger_config = {
         "headers": [],
         "specs": [
             {
@@ -30,12 +42,12 @@ def create_app(config_class=Config):
             }
         ],
         "swagger_ui": True,
-        "specs_route": "/apidocs",
-        "host": "mechanic-api-ewyr.onrender.com",
-        "schemes": ["https"]
-    })
+        "specs_route": "/apidocs"
+    }
 
-    # Register blueprints double check the names of the blueprints in the routes files if you get a build error.
+    Swagger(app, template=swagger_template, config=swagger_config)
+
+    # Register blueprints double check the names of the blueprints in the routes files if you get a build error. look at service-tickets
     from application.blueprints.customers.routes import customers_bp
     from application.blueprints.mechanics.routes import mechanics_bp
     from application.blueprints.service_tickets.routes import service_tickets_bp
