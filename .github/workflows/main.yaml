@@ -1,12 +1,12 @@
 # File: .github/workflows/main.yaml
-name: CI/CD Pipeline
+name: Flask CI
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,22 +14,36 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: 3.11
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run basic test
+      - name: Debug Info
         run: |
-          echo "✅ Tests will go here one day."
+          echo "Python: $(python --version)"
+          echo "Files: $(ls -l)"
 
   deploy:
-    needs: test
+    needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Deploy to Render
-        uses: render-examples/deploy-to-render-action@v1.3.2
+        uses: johnbeynon/render-deploy-action@v0.0.8
         with:
           service_id: ${{ secrets.RENDER_SERVICE_ID }}
           api_key: ${{ secrets.RENDER_API_KEY }}
