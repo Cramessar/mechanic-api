@@ -750,6 +750,75 @@
 				}
 			},
 			"response": []
-		}
+		},
+		{
+			"name": "/customers/{customer_id} (DELETE)",
+			"request": {
+			  "method": "DELETE",
+			  "header": [
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				},
+				{
+				  "key": "Authorization",
+				  "value": "Bearer <PUT_YOUR_CUSTOMER_JWT_TOKEN_HERE>",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "http://127.0.0.1:5000/customers/1",
+				"protocol": "http",
+				"host": [
+				  "127",
+				  "0",
+				  "0",
+				  "1"
+				],
+				"port": "5000",
+				"path": [
+				  "customers",
+				  "1"
+				]
+			  }
+			},
+			"response": []
+		  },
+		  {
+			"name": "/mechanics/{mechanic_id} (DELETE)",
+			"request": {
+			  "method": "DELETE",
+			  "header": [
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				},
+				{
+				  "key": "Authorization",
+				  "value": "Bearer <PUT_YOUR_MECHANIC_JWT_TOKEN_HERE>",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "http://127.0.0.1:5000/mechanics/4",
+				"protocol": "http",
+				"host": [
+				  "127",
+				  "0",
+				  "0",
+				  "1"
+				],
+				"port": "5000",
+				"path": [
+				  "mechanics",
+				  "4"
+				]
+			  }
+			},
+			"response": []
+		  }
+		
 	]
 }
