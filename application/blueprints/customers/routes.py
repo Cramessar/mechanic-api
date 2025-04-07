@@ -195,3 +195,40 @@ def get_all_customers():
         "pages": customers.pages,
         "current_page": customers.page
     })
+
+@customers_bp.route("/<int:customer_id>", methods=["DELETE"])
+@token_required
+def delete_customer(authenticated_customer_id, customer_id):
+    """
+    Delete a customer account
+    ---
+    tags:
+      - Customers
+    summary: Delete a customer
+    description: Deletes the customer with the given ID. The authenticated customer must match the customer being deleted.
+    security:
+      - ApiKeyAuth: []
+    parameters:
+      - name: customer_id
+        in: path
+        required: true
+        type: integer
+        description: The ID of the customer to delete
+    responses:
+      200:
+        description: Customer deleted successfully
+      403:
+        description: Forbidden – cannot delete another user's account
+      404:
+        description: Customer not found
+    """
+    if authenticated_customer_id != customer_id:
+        return jsonify({"message": "You are not authorized to delete this account."}), 403
+
+    customer = Customer.query.get(customer_id)
+    if not customer:
+        return jsonify({"message": "Customer not found."}), 404
+
+    db.session.delete(customer)
+    db.session.commit()
+    return jsonify({"message": "Customer deleted successfully."}), 200

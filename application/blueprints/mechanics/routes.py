@@ -186,4 +186,42 @@ def list_all_mechanics():
     mechanics = Mechanic.query.all()
     return mechanics_schema.jsonify(mechanics), 200
 
+@mechanics_bp.route("/<int:mechanic_id>", methods=["DELETE"])
+@mechanic_token_required
+def delete_mechanic(authenticated_mechanic_id, mechanic_id):
+    """
+    Delete a mechanic account
+    ---
+    tags:
+      - Mechanics
+    summary: Delete a mechanic
+    description: Deletes the mechanic with the given ID. The authenticated mechanic must match the mechanic being deleted.
+    security:
+      - ApiKeyAuth: []
+    parameters:
+      - name: mechanic_id
+        in: path
+        required: true
+        type: integer
+        description: The ID of the mechanic to delete
+    responses:
+      200:
+        description: Mechanic deleted successfully
+      403:
+        description: Forbidden – cannot delete another user's account
+      404:
+        description: Mechanic not found
+    """
+    if authenticated_mechanic_id != mechanic_id:
+        return jsonify({"message": "You are not authorized to delete this account."}), 403
+
+    mechanic = Mechanic.query.get(mechanic_id)
+    if not mechanic:
+        return jsonify({"message": "Mechanic not found."}), 404
+
+    db.session.delete(mechanic)
+    db.session.commit()
+    return jsonify({"message": "Mechanic deleted successfully."}), 200
+
+
 mechanic_bp = mechanics_bp
