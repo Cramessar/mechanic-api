@@ -70,7 +70,7 @@ class InventoryRoutesTestCase(unittest.TestCase):
         }, headers=self.headers)
 
         self.assertEqual(response.status_code, 400)
-        self.assertIn(b"Missing", response.data)
+        self.assertIn(b"price", response.data)
 
 if __name__ == "__main__":
     unittest.main()
