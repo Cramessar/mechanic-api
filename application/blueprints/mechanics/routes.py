@@ -223,5 +223,57 @@ def delete_mechanic(authenticated_mechanic_id, mechanic_id):
     db.session.commit()
     return jsonify({"message": "Mechanic deleted successfully."}), 200
 
+@mechanics_bp.route("/<int:mechanic_id>", methods=["PUT"])
+@mechanic_token_required
+def update_mechanic(authenticated_mechanic_id, mechanic_id):
+    """
+    Update a mechanic account
+    ---
+    tags:
+      - Mechanics
+    summary: Update a mechanic
+    description: Updates the mechanic information. The authenticated mechanic must match the ID.
+    security:
+      - ApiKeyAuth: []
+    parameters:
+      - name: mechanic_id
+        in: path
+        required: true
+        type: integer
+        description: The ID of the mechanic to update
+      - in: body
+        name: body
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            password:
+              type: string
+    responses:
+      200:
+        description: Mechanic updated successfully
+      403:
+        description: Unauthorized update attempt
+      404:
+        description: Mechanic not found
+    """
+    if authenticated_mechanic_id != mechanic_id:
+        return jsonify({"message": "Unauthorized update attempt."}), 403
+
+    mechanic = Mechanic.query.get(mechanic_id)
+    if not mechanic:
+        return jsonify({"message": "Mechanic not found."}), 404
+
+    data = request.get_json()
+    if "name" in data:
+        mechanic.name = data["name"]
+    if "password" in data:
+        mechanic.password = hash_password(data["password"])
+
+    db.session.commit()
+    return jsonify({"message": "Mechanic updated successfully."}), 200
+
+
 
 mechanic_bp = mechanics_bp

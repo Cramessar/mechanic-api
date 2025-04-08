@@ -232,3 +232,58 @@ def delete_customer(authenticated_customer_id, customer_id):
     db.session.delete(customer)
     db.session.commit()
     return jsonify({"message": "Customer deleted successfully."}), 200
+
+@customers_bp.route("/<int:customer_id>", methods=["PUT"])
+@token_required
+def update_customer(authenticated_customer_id, customer_id):
+    """
+    Update a customer account
+    ---
+    tags:
+      - Customers
+    summary: Update a customer
+    description: Updates the customer information. The authenticated customer must match the ID.
+    security:
+      - ApiKeyAuth: []
+    parameters:
+      - name: customer_id
+        in: path
+        required: true
+        type: integer
+        description: The ID of the customer to update
+      - in: body
+        name: body
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            password:
+              type: string
+    responses:
+      200:
+        description: Customer updated successfully
+      403:
+        description: Unauthorized update attempt
+      404:
+        description: Customer not found
+    """
+    if authenticated_customer_id != customer_id:
+        return jsonify({"message": "Unauthorized update attempt."}), 403
+
+    customer = Customer.query.get(customer_id)
+    if not customer:
+        return jsonify({"message": "Customer not found."}), 404
+
+    data = request.get_json()
+    if "name" in data:
+        customer.name = data["name"]
+    if "email" in data:
+        customer.email = data["email"]
+    if "password" in data:
+        customer.password = hash_password(data["password"])
+
+    db.session.commit()
+    return jsonify({"message": "Customer updated successfully."}), 200
